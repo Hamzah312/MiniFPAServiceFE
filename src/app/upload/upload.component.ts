@@ -124,10 +124,21 @@ export class UploadComponent {
         },
         error: (error) => {
           console.error('Upload error:', error);
-          this.message.set({
-            text: error.error?.message || 'Upload failed. Please try again.',
-            type: 'error'
-          });
+          console.log('Request was made to:', `/api/finance/upload`);
+          console.log('Full error details:', error);
+          
+          // Check if it's a proxy/connection error
+          if (error.status === 0) {
+            this.message.set({
+              text: 'Cannot connect to backend server. Proxy is working but backend is not available.',
+              type: 'error'
+            });
+          } else {
+            this.message.set({
+              text: error.error?.message || 'Upload failed. Please try again.',
+              type: 'error'
+            });
+          }
           this.uploadProgress.set(0);
         }
       });
