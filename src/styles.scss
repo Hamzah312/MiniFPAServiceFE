@@ -1,0 +1,92 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+// Define a custom theme using Material 3
+$fpa-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto',
+    plain-family: 'Roboto',
+  ),
+  density: (
+    scale: 0,
+  )
+));
+
+@include mat.all-component-themes($fpa-theme);
+
+/* Global styles */
+html, body { 
+  height: 100%; 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+  background-color: #303030;
+  color: #ffffff;
+}
+
+.upload-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.upload-card {
+  max-width: 500px;
+  width: 100%;
+}
+
+.form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.file-input-container {
+  border: 2px dashed #666;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.file-input-container:hover {
+  border-color: #2196f3;
+}
+
+.file-input-container.dragover {
+  border-color: #2196f3;
+  background-color: rgba(33, 150, 243, 0.1);
+}
+
+.file-input {
+  display: none;
+}
+
+.file-info {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #b0b0b0;
+}
+
+.submit-button {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.message {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.progress-bar {
+  margin-top: 16px;
+}

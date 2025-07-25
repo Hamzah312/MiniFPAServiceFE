@@ -1,0 +1,102 @@
+<div class="upload-container">
+  <mat-card class="upload-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>upload_file</mat-icon>
+        Upload Financial Records
+      </mat-card-title>
+      <mat-card-subtitle>Upload your Excel file with financial data</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+        <!-- Form Fields -->
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Scenario</mat-label>
+          <input matInput formControlName="scenario" placeholder="Enter scenario name">
+          <mat-error *ngIf="uploadForm.get('scenario')?.hasError('required')">
+            Scenario is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>Version</mat-label>
+          <input matInput formControlName="version" placeholder="Enter version">
+          <mat-error *ngIf="uploadForm.get('version')?.hasError('required')">
+            Version is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="form-field" appearance="outline">
+          <mat-label>User Name</mat-label>
+          <input matInput formControlName="userName" placeholder="Enter your name">
+          <mat-error *ngIf="uploadForm.get('userName')?.hasError('required')">
+            User name is required
+          </mat-error>
+        </mat-form-field>
+
+        <!-- File Upload Area -->
+        <div 
+          class="file-input-container"
+          (click)="triggerFileInput()"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)">
+          
+          <input 
+            type="file" 
+            id="fileInput"
+            class="file-input"
+            accept=".xlsx"
+            (change)="onFileSelected($event)">
+          
+          <mat-icon style="font-size: 48px; height: 48px; width: 48px; color: #666;">
+            cloud_upload
+          </mat-icon>
+          
+          <p *ngIf="!selectedFile()" style="margin: 16px 0 8px 0; font-size: 16px;">
+            Click to browse or drag and drop your Excel file here
+          </p>
+          
+          <p *ngIf="selectedFile()" style="margin: 16px 0 8px 0; font-size: 16px; color: #4caf50;">
+            <mat-icon style="vertical-align: middle; margin-right: 8px;">check_circle</mat-icon>
+            {{ selectedFile()!.name }}
+          </p>
+          
+          <p class="file-info">Only .xlsx files are supported</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <mat-progress-bar 
+          *ngIf="isLoading()" 
+          class="progress-bar"
+          mode="determinate" 
+          [value]="uploadProgress()">
+        </mat-progress-bar>
+
+        <!-- Submit Button -->
+        <button 
+          mat-raised-button 
+          color="primary" 
+          type="submit"
+          class="submit-button"
+          [disabled]="isLoading() || !uploadForm.valid || !selectedFile()">
+          
+          <mat-icon *ngIf="!isLoading()">upload</mat-icon>
+          <mat-icon *ngIf="isLoading()">hourglass_empty</mat-icon>
+          {{ isLoading() ? 'Uploading...' : 'Upload File' }}
+        </button>
+
+        <!-- Message Display -->
+        <div *ngIf="message()" class="message">
+          <div [style.color]="message()!.type === 'success' ? '#4caf50' : '#f44336'">
+            <mat-icon style="vertical-align: middle; margin-right: 8px;">
+              {{ message()!.type === 'success' ? 'check_circle' : 'error' }}
+            </mat-icon>
+            {{ message()!.text }}
+          </div>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
