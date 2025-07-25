@@ -101,8 +101,8 @@ export class UploadComponent {
       formData.append('version', version);
       formData.append('userName', userName);
 
-// Remove query parameters
-      this.http.post(`http://localhost:5210/api/finance/upload`, formData, {
+      // Use relative URL with proxy
+      this.http.post(`/api/finance/upload`, formData, {
         reportProgress: true,
         observe: 'events'
       })
