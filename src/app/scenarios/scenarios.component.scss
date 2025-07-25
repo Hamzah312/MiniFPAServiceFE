@@ -1,0 +1,31 @@
+.scenarios-card mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-actions {
+  margin-left: auto;
+}
+
+.table-container {
+  max-height: 600px;
+  overflow: auto;
+}
+
+.scenarios-table {
+  width: 100%;
+}
+
+.no-data {
+  text-align: center;
+  padding: 48px;
+  color: #666;
+}
+
+.no-data mat-icon {
+  font-size: 64px;
+  height: 64px;
+  width: 64px;
+  color: #999;
+}

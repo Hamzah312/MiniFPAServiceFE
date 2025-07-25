@@ -1,0 +1,142 @@
+<mat-card class="filter-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>assessment</mat-icon>
+      Generate Report
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="reportForm" (ngSubmit)="generateReport()" class="report-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Scenario</mat-label>
+        <input matInput formControlName="scenario" placeholder="Enter scenario name">
+        <mat-error *ngIf="reportForm.get('scenario')?.hasError('required')">
+          Scenario is required
+        </mat-error>
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Version (Optional)</mat-label>
+        <input matInput formControlName="version" placeholder="Enter version">
+      </mat-form-field>
+      
+      <button mat-raised-button color="primary" type="submit" [disabled]="!reportForm.valid || isLoading()">
+        <mat-icon>play_arrow</mat-icon>
+        Generate Report
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<div *ngIf="isLoading()" class="loading-container">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  <p>Generating report...</p>
+</div>
+
+<div *ngIf="reportData() && !isLoading()" class="report-container">
+  <!-- Summary Cards -->
+  <div class="summary-cards">
+    <mat-card class="summary-card revenue">
+      <mat-card-content>
+        <div class="card-header">
+          <mat-icon>trending_up</mat-icon>
+          <span>Total Revenue</span>
+        </div>
+        <div class="amount">{{ reportData()!.totalRevenue | currency }}</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="summary-card expenses">
+      <mat-card-content>
+        <div class="card-header">
+          <mat-icon>trending_down</mat-icon>
+          <span>Total Expenses</span>
+        </div>
+        <div class="amount">{{ reportData()!.totalExpenses | currency }}</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="summary-card net-income" [class.positive]="reportData()!.netIncome > 0" [class.negative]="reportData()!.netIncome < 0">
+      <mat-card-content>
+        <div class="card-header">
+          <mat-icon>account_balance</mat-icon>
+          <span>Net Income</span>
+        </div>
+        <div class="amount">{{ reportData()!.netIncome | currency }}</div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="summary-card records">
+      <mat-card-content>
+        <div class="card-header">
+          <mat-icon>receipt</mat-icon>
+          <span>Records</span>
+        </div>
+        <div class="amount">{{ reportData()!.recordCount | number }}</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Top Accounts -->
+  <mat-card class="details-card">
+    <mat-card-header>
+      <mat-card-title>Top Accounts by Amount</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="account-list">
+        <div *ngFor="let account of reportData()!.topAccounts" class="account-item">
+          <div class="account-info">
+            <span class="account-name">{{ account.account }}</span>
+            <span class="account-amount">{{ account.amount | currency }}</span>
+          </div>
+          <div class="account-percentage">{{ account.percentage }}%</div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Monthly Breakdown -->
+  <mat-card class="details-card">
+    <mat-card-header>
+      <mat-card-title>Monthly Breakdown</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="monthly-list">
+        <div *ngFor="let month of reportData()!.monthlyBreakdown" class="month-item">
+          <div class="month-header">{{ month.period }}</div>
+          <div class="month-details">
+            <div class="detail-item">
+              <span>Revenue:</span>
+              <span class="revenue">{{ month.revenue | currency }}</span>
+            </div>
+            <div class="detail-item">
+              <span>Expenses:</span>
+              <span class="expenses">{{ month.expenses | currency }}</span>
+            </div>
+            <div class="detail-item">
+              <span>Net Income:</span>
+              <span class="net" [class.positive]="month.netIncome > 0" [class.negative]="month.netIncome < 0">
+                {{ month.netIncome | currency }}
+              </span>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Report Info -->
+  <mat-card class="info-card">
+    <mat-card-content>
+      <p><strong>Scenario:</strong> {{ reportData()!.scenario }}</p>
+      <p><strong>Version:</strong> {{ reportData()!.version }}</p>
+      <p><strong>Last Updated:</strong> {{ reportData()!.lastUpdated | date:'full' }}</p>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div *ngIf="!reportData() && !isLoading()" class="no-data">
+  <mat-icon>assessment</mat-icon>
+  <p>Enter a scenario name above to generate a summary report.</p>
+</div>

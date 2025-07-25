@@ -34,40 +34,8 @@ interface Scenario {
     MatButtonModule,
     MatDialogModule
   ],
-  template: `
-    <h2 mat-dialog-title>Clone Scenario</h2>
-    <mat-dialog-content>
-      <form [formGroup]="cloneForm">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>New Scenario Name</mat-label>
-          <input matInput formControlName="newName" placeholder="Enter new scenario name">
-          <mat-error *ngIf="cloneForm.get('newName')?.hasError('required')">
-            Name is required
-          </mat-error>
-        </mat-form-field>
-        
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>New Version</mat-label>
-          <input matInput formControlName="newVersion" placeholder="Enter new version">
-          <mat-error *ngIf="cloneForm.get('newVersion')?.hasError('required')">
-            Version is required
-          </mat-error>
-        </mat-form-field>
-      </form>
-    </mat-dialog-content>
-    <mat-dialog-actions align="end">
-      <button mat-button mat-dialog-close>Cancel</button>
-      <button mat-raised-button color="primary" [disabled]="!cloneForm.valid" (click)="onClone()">
-        Clone
-      </button>
-    </mat-dialog-actions>
-  `,
-  styles: [`
-    .full-width {
-      width: 100%;
-      margin-bottom: 16px;
-    }
-  `]
+  templateUrl: './clone-dialog.component.html',
+  styleUrl: './clone-dialog.component.scss'
 })
 export class CloneDialogComponent {
   cloneForm: FormGroup;
@@ -106,106 +74,8 @@ export class CloneDialogComponent {
     MatDialogModule,
     MatSnackBarModule
   ],
-  template: `
-    <mat-card class="scenarios-card">
-      <mat-card-header>
-        <mat-card-title>
-          <mat-icon>scenario</mat-icon>
-          Scenarios Management
-        </mat-card-title>
-        <mat-card-subtitle>View and manage financial planning scenarios</mat-card-subtitle>
-        <div class="header-actions">
-          <button mat-raised-button color="primary" (click)="loadScenarios()" [disabled]="isLoading()">
-            <mat-icon>refresh</mat-icon>
-            Refresh
-          </button>
-        </div>
-      </mat-card-header>
-
-      <mat-progress-bar *ngIf="isLoading()" mode="indeterminate"></mat-progress-bar>
-
-      <mat-card-content>
-        <div class="table-container" *ngIf="scenarios().length > 0">
-          <table mat-table [dataSource]="scenarios()" class="scenarios-table">
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef>Scenario Name</th>
-              <td mat-cell *matCellDef="let scenario">{{ scenario.name }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="version">
-              <th mat-header-cell *matHeaderCellDef>Version</th>
-              <td mat-cell *matCellDef="let scenario">{{ scenario.version }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="description">
-              <th mat-header-cell *matHeaderCellDef>Description</th>
-              <td mat-cell *matCellDef="let scenario">{{ scenario.description || '-' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="recordCount">
-              <th mat-header-cell *matHeaderCellDef>Records</th>
-              <td mat-cell *matCellDef="let scenario">{{ scenario.recordCount }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="lastModified">
-              <th mat-header-cell *matHeaderCellDef>Last Modified</th>
-              <td mat-cell *matCellDef="let scenario">{{ scenario.lastModified | date:'short' }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef>Actions</th>
-              <td mat-cell *matCellDef="let scenario">
-                <button mat-icon-button color="primary" (click)="cloneScenario(scenario)" [disabled]="isLoading()">
-                  <mat-icon>content_copy</mat-icon>
-                </button>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          </table>
-        </div>
-
-        <div *ngIf="!isLoading() && scenarios().length === 0" class="no-data">
-          <mat-icon>inbox</mat-icon>
-          <p>No scenarios found. Upload some financial records to create scenarios.</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  `,
-  styles: [`
-    .scenarios-card mat-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header-actions {
-      margin-left: auto;
-    }
-
-    .table-container {
-      max-height: 600px;
-      overflow: auto;
-    }
-
-    .scenarios-table {
-      width: 100%;
-    }
-
-    .no-data {
-      text-align: center;
-      padding: 48px;
-      color: #666;
-    }
-
-    .no-data mat-icon {
-      font-size: 64px;
-      height: 64px;
-      width: 64px;
-      color: #999;
-    }
-  `]
+  templateUrl: './scenarios.component.html',
+  styleUrl: './scenarios.component.scss'
 })
 export class ScenariosComponent implements OnInit {
   scenarios = signal<Scenario[]>([]);

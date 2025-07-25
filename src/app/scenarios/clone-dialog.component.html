@@ -1,0 +1,26 @@
+<h2 mat-dialog-title>Clone Scenario</h2>
+<mat-dialog-content>
+  <form [formGroup]="cloneForm">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>New Scenario Name</mat-label>
+      <input matInput formControlName="newName" placeholder="Enter new scenario name">
+      <mat-error *ngIf="cloneForm.get('newName')?.hasError('required')">
+        Name is required
+      </mat-error>
+    </mat-form-field>
+    
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>New Version</mat-label>
+      <input matInput formControlName="newVersion" placeholder="Enter new version">
+      <mat-error *ngIf="cloneForm.get('newVersion')?.hasError('required')">
+        Version is required
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="!cloneForm.valid" (click)="onClone()">
+    Clone
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,141 @@
+<mat-card class="lookup-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>search</mat-icon>
+      Lookup Data
+    </mat-card-title>
+    <mat-card-subtitle>Account mappings and foreign exchange rates</mat-card-subtitle>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="refreshData()" [disabled]="isLoading()">
+        <mat-icon>refresh</mat-icon>
+        Refresh All
+      </button>
+    </div>
+  </mat-card-header>
+
+  <mat-progress-bar *ngIf="isLoading()" mode="indeterminate"></mat-progress-bar>
+
+  <mat-card-content>
+    <mat-tab-group>
+      <!-- Account Mapping Tab -->
+      <mat-tab label="Account Mapping">
+        <ng-template matTabContent>
+          <div class="tab-content">
+            <div class="tab-header">
+              <h3>Account Mapping Rules</h3>
+              <button mat-button color="primary" (click)="loadAccountMappings()" [disabled]="isLoading()">
+                <mat-icon>refresh</mat-icon>
+                Refresh
+              </button>
+            </div>
+
+            <div class="table-container" *ngIf="accountMappings().length > 0">
+              <table mat-table [dataSource]="accountMappings()" class="lookup-table">
+                <ng-container matColumnDef="sourceAccount">
+                  <th mat-header-cell *matHeaderCellDef>Source Account</th>
+                  <td mat-cell *matCellDef="let mapping">{{ mapping.sourceAccount }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="targetAccount">
+                  <th mat-header-cell *matHeaderCellDef>Target Account</th>
+                  <td mat-cell *matCellDef="let mapping">{{ mapping.targetAccount }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="accountType">
+                  <th mat-header-cell *matHeaderCellDef>Type</th>
+                  <td mat-cell *matCellDef="let mapping">
+                    <span class="account-type" [class]="mapping.accountType.toLowerCase()">
+                      {{ mapping.accountType }}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                  <th mat-header-cell *matHeaderCellDef>Description</th>
+                  <td mat-cell *matCellDef="let mapping">{{ mapping.description || '-' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="isActive">
+                  <th mat-header-cell *matHeaderCellDef>Status</th>
+                  <td mat-cell *matCellDef="let mapping">
+                    <span class="status" [class.active]="mapping.isActive" [class.inactive]="!mapping.isActive">
+                      {{ mapping.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="accountColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: accountColumns;"></tr>
+              </table>
+            </div>
+
+            <div *ngIf="accountMappings().length === 0 && !isLoading()" class="no-data">
+              <mat-icon>map</mat-icon>
+              <p>No account mappings found.</p>
+            </div>
+          </div>
+        </ng-template>
+      </mat-tab>
+
+      <!-- FX Rates Tab -->
+      <mat-tab label="FX Rates">
+        <ng-template matTabContent>
+          <div class="tab-content">
+            <div class="tab-header">
+              <h3>Foreign Exchange Rates</h3>
+              <button mat-button color="primary" (click)="loadFXRates()" [disabled]="isLoading()">
+                <mat-icon>refresh</mat-icon>
+                Refresh
+              </button>
+            </div>
+
+            <div class="table-container" *ngIf="fxRates().length > 0">
+              <table mat-table [dataSource]="fxRates()" class="lookup-table">
+                <ng-container matColumnDef="fromCurrency">
+                  <th mat-header-cell *matHeaderCellDef>From</th>
+                  <td mat-cell *matCellDef="let rate">
+                    <span class="currency-code">{{ rate.fromCurrency }}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="toCurrency">
+                  <th mat-header-cell *matHeaderCellDef>To</th>
+                  <td mat-cell *matCellDef="let rate">
+                    <span class="currency-code">{{ rate.toCurrency }}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rate">
+                  <th mat-header-cell *matHeaderCellDef>Rate</th>
+                  <td mat-cell *matCellDef="let rate">
+                    <span class="fx-rate">{{ rate.rate | number:'1.4-4' }}</span>
+                  </td>
+                </ng-container>
+
+                <ng-container matColumnDef="effectiveDate">
+                  <th mat-header-cell *matHeaderCellDef>Effective Date</th>
+                  <td mat-cell *matCellDef="let rate">{{ rate.effectiveDate | date:'short' }}</td>
+                </ng-container>
+
+                <ng-container matColumnDef="source">
+                  <th mat-header-cell *matHeaderCellDef>Source</th>
+                  <td mat-cell *matCellDef="let rate">
+                    <span class="source-badge">{{ rate.source }}</span>
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="fxColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: fxColumns;"></tr>
+              </table>
+            </div>
+
+            <div *ngIf="fxRates().length === 0 && !isLoading()" class="no-data">
+              <mat-icon>currency_exchange</mat-icon>
+              <p>No FX rates found.</p>
+            </div>
+          </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

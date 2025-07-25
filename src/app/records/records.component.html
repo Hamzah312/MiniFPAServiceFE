@@ -1,0 +1,81 @@
+<mat-card class="filter-card">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>filter_list</mat-icon>
+      Filter Records
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="filterForm" (ngSubmit)="loadRecords()" class="filter-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Scenario</mat-label>
+        <input matInput formControlName="scenario" placeholder="Enter scenario name">
+      </mat-form-field>
+      
+      <mat-form-field appearance="outline">
+        <mat-label>Version</mat-label>
+        <input matInput formControlName="version" placeholder="Enter version">
+      </mat-form-field>
+      
+      <button mat-raised-button color="primary" type="submit" [disabled]="isLoading()">
+        <mat-icon>search</mat-icon>
+        Load Records
+      </button>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="records-card" *ngIf="records().length > 0 || isLoading()">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon>table_view</mat-icon>
+      Financial Records ({{ records().length }})
+    </mat-card-title>
+  </mat-card-header>
+  
+  <mat-progress-bar *ngIf="isLoading()" mode="indeterminate"></mat-progress-bar>
+  
+  <mat-card-content>
+    <div class="table-container">
+      <table mat-table [dataSource]="records()" class="records-table">
+        <ng-container matColumnDef="scenario">
+          <th mat-header-cell *matHeaderCellDef>Scenario</th>
+          <td mat-cell *matCellDef="let record">{{ record.scenario }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="version">
+          <th mat-header-cell *matHeaderCellDef>Version</th>
+          <td mat-cell *matCellDef="let record">{{ record.version }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="account">
+          <th mat-header-cell *matHeaderCellDef>Account</th>
+          <td mat-cell *matCellDef="let record">{{ record.account }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="period">
+          <th mat-header-cell *matHeaderCellDef>Period</th>
+          <td mat-cell *matCellDef="let record">{{ record.period }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef>Amount</th>
+          <td mat-cell *matCellDef="let record">{{ record.amount | currency:record.currency }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="uploadDate">
+          <th mat-header-cell *matHeaderCellDef>Upload Date</th>
+          <td mat-cell *matCellDef="let record">{{ record.uploadDate | date:'short' }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div *ngIf="!isLoading() && records().length === 0" class="no-data">
+  <mat-icon>inbox</mat-icon>
+  <p>No records found. Use the filter above to search for records.</p>
+</div>

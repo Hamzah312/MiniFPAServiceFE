@@ -1,0 +1,40 @@
+.filter-card {
+  margin-bottom: 24px;
+}
+
+.filter-form {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+}
+
+.filter-form mat-form-field {
+  min-width: 200px;
+}
+
+.records-card {
+  margin-bottom: 24px;
+}
+
+.table-container {
+  max-height: 500px;
+  overflow: auto;
+}
+
+.records-table {
+  width: 100%;
+}
+
+.no-data {
+  text-align: center;
+  padding: 48px;
+  color: #666;
+}
+
+.no-data mat-icon {
+  font-size: 64px;
+  height: 64px;
+  width: 64px;
+  color: #999;
+}
