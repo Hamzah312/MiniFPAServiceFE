@@ -94,20 +94,19 @@ export class UploadComponent {
       this.uploadProgress.set(0);
       this.message.set(null);
 
+      const { scenario, version, userName } = this.uploadForm.value;
       const formData = new FormData();
       formData.append('file', this.selectedFile()!);
+      formData.append('scenario', scenario);
+      formData.append('version', version);
+      formData.append('userName', userName);
 
-      const { scenario, version, userName } = this.uploadForm.value;
-      const params = new URLSearchParams({
-        scenario,
-        version,
-        userName
-      });
-
-      this.http.post(`/api/FinancialRecords/upload?${params.toString()}`, formData, {
+// Remove query parameters
+      this.http.post(`http://localhost:5210/api/finance/upload`, formData, {
         reportProgress: true,
         observe: 'events'
       })
+
       .pipe(
         finalize(() => this.isLoading.set(false))
       )
@@ -125,9 +124,9 @@ export class UploadComponent {
         },
         error: (error) => {
           console.error('Upload error:', error);
-          this.message.set({ 
-            text: error.error?.message || 'Upload failed. Please try again.', 
-            type: 'error' 
+          this.message.set({
+            text: error.error?.message || 'Upload failed. Please try again.',
+            type: 'error'
           });
           this.uploadProgress.set(0);
         }
